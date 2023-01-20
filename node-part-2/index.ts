@@ -1,9 +1,16 @@
 import express from "express"
 import {PrismaClient} from "@prisma/client"
+import cors from "cors"
 
 const prisma = new PrismaClient();
+
+const corsOptions = {
+  origin: "http://localhost:8080"
+};
+
 const app = express();
-app.use(express.json())
+app.use(express.json());
+app.use(cors(corsOptions));
 
 // get all
 app.get("/planets", async (request, response) => {
