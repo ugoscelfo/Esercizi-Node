@@ -1,7 +1,10 @@
-import express from "express"
-import {PrismaClient} from "@prisma/client"
-import cors from "cors"
+import express from "express";
+import {PrismaClient} from "@prisma/client";
+import cors from "cors";
+import { initMulterMiddleware } from "./middleware/multer.js";
 
+
+const upload = initMulterMiddleware();
 const prisma = new PrismaClient();
 
 const corsOptions = {
@@ -61,6 +64,20 @@ app.delete("/planets/:id", async (request, response) => {
     where: {id: Number(request.params.id)}
   });
   response.json(planet);
+});
+
+app.post("/planets/:id/photo", 
+  upload.single("photo"),
+  async (request, response, next) => {
+    console.log("request.file", request.file);
+
+    if(!request.file) {
+      response.status(400)
+      return next("no file uploaded")
+    }
+
+    const photoFilename = request.file.filename;
+    response.status(201).json({ photoFilename });
 });
 
 app.listen(3000, () => {
