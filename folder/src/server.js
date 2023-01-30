@@ -1,7 +1,9 @@
 import express from "express";
+import "dotenv/config";
+import config from "./config.js";
 import {PrismaClient} from "@prisma/client";
 import cors from "cors";
-import { initMulterMiddleware } from "./middleware/multer.js";
+import { initMulterMiddleware } from "../lib/middleware/multer.js";
 
 
 const upload = initMulterMiddleware();
@@ -80,6 +82,6 @@ app.post("/planets/:id/photo",
     response.status(201).json({ photoFilename });
 });
 
-app.listen(3000, () => {
-	console.log("running on port", 3000)
-})
+const port = config.PORT
+
+app.listen(port, () => console.log(`[Server]: Server are running on port http://localhost:${port}`))
